@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Термины и ученые | Выгорание</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* === ОБЩИЕ СТИЛИ (те же, что на главной, но без интро) === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .master-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 60px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .site-nav a {
+            color: #1e293b;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .site-nav a i {
+            font-size: 1.1rem;
+        }
+
+        .site-nav a.active {
+            background: #ef4444;
+            color: white;
+        }
+
+        .site-nav a:not(.active):hover {
+            background: #f1f5f9;
+        }
+
+        .site-content {
+            background-color: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 34, 58, 0.15);
+            padding: 2.5rem 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            color: #0f172a;
+            border-left: 8px solid #ef4444;
+            padding-left: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1.5rem 0;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Карточки для терминов */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+
+        .term-card {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            transition: 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .term-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0,0,0,0.1);
+            border-color: #ef4444;
+        }
+
+        .term-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .term-title i {
+            color: #ef4444;
+            font-size: 1.4rem;
+        }
+
+        .term-def {
+            color: #475569;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .term-ref {
+            font-size: 0.9rem;
+            color: #64748b;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        /* Ученые */
+        .scientists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .scientist-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scientist-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: #ef4444;
+        }
+
+        .scientist-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .scientist-years {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .scientist-desc {
+            color: #334155;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .scientist-contrib {
+            background: #ffffff;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .scientist-contrib i {
+            color: #ef4444;
+            margin-right: 6px;
+        }
+
+        .info-box {
+            background: #f1f5f9;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 6px solid #ef4444;
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .site-content {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .site-nav {
+                gap: 1rem;
+            }
+            .site-nav a {
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="master-wrapper">
+        <!-- Навигация -->
+        <nav class="site-nav">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="terms.html" class="active"><i class="fas fa-graduation-cap"></i> Термины и ученые</a>
+        </nav>
+
+        <div class="site-content">
+            <div class="container">
+                <h1>
+                    <i class="fas fa-book-open" style="color: #ef4444;"></i> 
+                    Терминология и исследователи
+                </h1>
+
+                <!-- Термины -->
+                <h2><i class="fas fa-dictionary"></i> Ключевые термины</h2>
+                <div class="terms-grid">
+                    <div class="term-card">
+                        <div class="term-title"><i class="fas fa-fire"></i> Burnout</div>
+                        <div class="term-def">Синдром эмоционального выгорания — состояние физического, эмоционального и умственного истощения, проявляющееся в профессиях социальной сферы.</div>
+                        <div class="term-ref">Термин введен Гербертом Фройденбергером в 1974 году.</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title"><i class="fas fa-heart-broken"></i> Деперсонализация</div>
+                        <div class="term-def">Циничное, обезличенное отношение к получателям услуг (клиентам, пациентам, ученикам). Один из ключевых компонентов выгорания.</div>
+                        <div class="term-ref">Кристина Маслах, 1981</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title"><i class="fas fa-chart-line"></i> Редукция достижений</div>
+                        <div class="term-def">Ощущение некомпетентности, неудачи в работе, снижение продуктивности и негативная оценка себя как профессионала.</div>
+                        <div class="term-ref">Третий компонент в модели Маслах</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title"><i class="fas fa-brain"></i> Эмоциональное истощение</div>
+                        <div class="term-def">Чувство опустошенности, исчерпания эмоциональных ресурсов, усталость, вызванная работой.</div>
+                        <div class="term-ref">Основной, первый компонент выгорания</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title"><i class="fas fa-hand-holding-heart"></i> Копинг-стратегии</div>
+                        <div class="term-def">Способы совладания со стрессом. Могут быть адаптивными (поиск поддержки) и дезадаптивными (избегание).</div>
+                        <div class="term-ref">Р. Лазарус, С. Фолкман</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title"><i class="fas fa-clock"></i> Хронический стресс</div>
+                        <div class="term-def">Длительное напряжение, возникающее при постоянном воздействии стрессоров, ведущее к истощению адаптационных резервов.</div>
+                        <div class="term-ref">Г. Селье, общая теория стресса</div>
+                    </div>
+                </div>
+
+                <!-- Ученые и исследователи -->
+                <h2 style="margin-top: 3rem;"><i class="fas fa-user-graduate"></i> Ученые и исследователи</h2>
+                
+                <div class="scientists-grid">
+                    <div class="scientist-card">
+                        <div class="scientist-name">Герберт Фройденбергер</div>
+                        <div class="scientist-years">1926–1999</div>
+                        <div class="scientist-desc">Американский психоаналитик, который первым ввел термин «burnout» (выгорание) в научный обиход.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> В 1974 году описал синдром на основе наблюдений за волонтерами в бесплатной клинике Нью-Йорка.
+                        </div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-name">Кристина Маслах</div>
+                        <div class="scientist-years">род. 1946</div>
+                        <div class="scientist-desc">Профессор психологии Калифорнийского университета в Беркли, ведущий исследователь выгорания.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> Разработала трехкомпонентную модель выгорания (эмоциональное истощение, деперсонализация, редукция личных достижений) и опросник MBI.
+                        </div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-name">Сьюзан Джексон</div>
+                        <div class="scientist-years">Современница</div>
+                        <div class="scientist-desc">Соавтор Кристины Маслах в разработке Maslach Burnout Inventory.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> Внесла вклад в психометрическую валидацию инструментов измерения выгорания.
+                        </div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-name">Вильмар Шауфели</div>
+                        <div class="scientist-years">род. 1960</div>
+                        <div class="scientist-desc">Голландский ученый, профессор Утрехтского университета.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> Исследовал вовлеченность в работу (work engagement) как противоположность выгоранию. Разработчик опросника UWES.
+                        </div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-name">Арнольд Баккер</div>
+                        <div class="scientist-years">род. 1964</div>
+                        <div class="scientist-desc">Профессор Утрехтского университета, специалист по организационной психологии.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> Изучал связь выгорания с требованиями работы и ресурсами (JD-R модель).
+                        </div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-name">Ганс Селье</div>
+                        <div class="scientist-years">1907–1982</div>
+                        <div class="scientist-desc">Канадский эндокринолог, основоположник теории стресса.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> Создал концепцию общего адаптационного синдрома (стадии тревоги, сопротивления, истощения) — фундамент для понимания выгорания.
+                        </div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-name">Ричард Лазарус</div>
+                        <div class="scientist-years">1922–2002</div>
+                        <div class="scientist-desc">Американский психолог, специалист по стрессу и копингу.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> Разработал транзактную модель стресса и совладания, объясняющую индивидуальные различия в реакции на стресс.
+                        </div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-name">Майкл Лейтер</div>
+                        <div class="scientist-years">Современник</div>
+                        <div class="scientist-desc">Профессор психологии, университет Акадии, Канада.</div>
+                        <div class="scientist-contrib">
+                            <i class="fas fa-star"></i> Многолетний соавтор Кристины Маслах, исследовал организационные факторы выгорания.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Дополнительный блок про исследования -->
+                <div class="info-box">
+                    <h3 style="margin-bottom: 0.5rem;"><i class="fas fa-microscope"></i> Современные направления исследований</h3>
+                    <p style="color: #334155;">Сегодня выгорание изучается в контексте цифрового стресса, удаленной работы, дисбаланса усилий и вознаграждения (модель Сигриста), а также в связи с психосоматическими заболеваниями. В 2019 году ВОЗ официально включила синдром выгорания в 11-й пересмотр Международной классификации болезней (МКБ-11) как фактор, влияющий на состояние здоровья.</p>
+                </div>
+
+                <footer>
+                    <i class="fas fa-shield-alt"></i> Список составлен на основе открытых источников. Для углубленного изучения рекомендуется читать оригинальные работы указанных авторов.
+                </footer>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
