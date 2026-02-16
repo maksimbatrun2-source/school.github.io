@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профессиональное выгорание | Интро</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* === СБРОС И ОСНОВНЫЕ СТИЛИ (БЕЗ ИЗМЕНЕНИЙ, КРОМЕ ДОБАВЛЕНИЯ АНИМАЦИЙ) === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #0f172a; /* темный фон на время интро */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            transition: background-color 0.5s ease;
+        }
+
+        body.site-visible {
+            background-color: #f8fafc; /* возвращаем светлый фон после интро */
+        }
+
+        /* Контейнер для всего (интро + сайт) */
+        .master-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        /* САЙТ (изначально скрыт, появляется после интро) */
+        .site-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease, visibility 0s 0.8s;
+            background-color: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 34, 58, 0.15);
+            padding: 2.5rem 2rem;
+        }
+
+        .site-content.visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.8s ease, visibility 0s 0s;
+        }
+
+        /* ========== ИНТРО ========== */
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s ease, visibility 1s;
+        }
+
+        .intro-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .intro-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Три падающих фото */
+        .falling-photos {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .photo {
+            width: 120px;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            transform: translateY(-200px) rotate(0deg);
+            animation: fall 1.2s cubic-bezier(0.56, 0.12, 0.2, 1) forwards;
+            position: relative;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .photo:nth-child(1) {
+            background-image: url('74b6ac29-6137-45cd-902a-f0138a701474.jfif'); /* мужчина усталый */
+            animation-delay: 0.1s;
+        }
+        .photo:nth-child(2) {
+            background-image: url('ac406847-132a-44b0-b4f2-988df04c97cd.jfif'); /* женщина стресс */
+            animation-delay: 0.3s;
+        }
+        .photo:nth-child(3) {
+            background-image: url('f66344c1-349d-4571-8fd5-e250c362d9e6.jfif'); /* офисный работник */
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-200px) rotate(-15deg);
+                opacity: 0;
+            }
+            70% {
+                transform: translateY(20px) rotate(5deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Взрыв (пиксели) */
+        .explosion {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            opacity: 0;
+            animation: explode 0.8s ease 1.5s forwards;
+        }
+
+        .pixel {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #ef4444;
+            border-radius: 2px;
+            box-shadow: 0 0 10px #ff8a8a;
+            opacity: 0;
+        }
+
+        /* Генерация множества пикселей через JS проще, но сделаем несколько для примера */
+        .pixel1 { top: 40%; left: 45%; animation: pixelFly 0.6s ease-out 1.5s forwards; }
+        .pixel2 { top: 45%; left: 55%; animation: pixelFly 0.7s ease-out 1.52s forwards; }
+        .pixel3 { top: 55%; left: 40%; animation: pixelFly 0.5s ease-out 1.55s forwards; }
+        .pixel4 { top: 60%; left: 60%; animation: pixelFly 0.8s ease-out 1.58s forwards; }
+        .pixel5 { top: 30%; left: 50%; animation: pixelFly 0.6s ease-out 1.6s forwards; }
+        .pixel6 { top: 70%; left: 45%; animation: pixelFly 0.7s ease-out 1.53s forwards; }
+        .pixel7 { top: 50%; left: 30%; animation: pixelFly 0.9s ease-out 1.57s forwards; }
+        .pixel8 { top: 50%; left: 70%; animation: pixelFly 0.65s ease-out 1.54s forwards; }
+        .pixel9 { top: 35%; left: 65%; animation: pixelFly 0.75s ease-out 1.59s forwards; }
+        .pixel10 { top: 65%; left: 35%; animation: pixelFly 0.85s ease-out 1.56s forwards; }
+        .pixel11 { top: 45%; left: 40%; animation: pixelFly 0.55s ease-out 1.51s forwards; }
+        .pixel12 { top: 55%; left: 60%; animation: pixelFly 0.95s ease-out 1.62s forwards; }
+
+        @keyframes pixelFly {
+            0% {
+                opacity: 1;
+                transform: scale(1) translate(0, 0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.3) translate(calc(cos(45deg)*150px), calc(sin(45deg)*150px));
+            }
+        }
+
+        /* Текст "BURNOUT" */
+        .intro-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 12px;
+            text-shadow: 0 0 20px #ef4444;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Кнопка пропуска (на всякий случай) */
+        .skip-intro {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            color: #94a3b8;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #334155;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            z-index: 2000;
+        }
+        .skip-intro:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        /* ===== СТИЛИ САЙТА (твой исходный код, немного адаптирован под новый контейнер) ===== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+            border-left: 8px solid #ef4444;
+            padding-left: 1.5rem;
+        }
+
+        .subhead {
+            font-size: 1.2rem;
+            color: #475569;
+            margin-bottom: 3rem;
+            background: #f1f5f9;
+            padding: 1.2rem 2rem;
+            border-radius: 1rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1.5rem 0;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: #1e293b;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #94a3b8;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.2rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .card-header i {
+            font-size: 2rem;
+        }
+
+        .card ul {
+            list-style: none;
+        }
+
+        .card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.8rem;
+            position: relative;
+        }
+
+        .card li:before {
+            content: "•";
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .symptom-block {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 1.8rem;
+            border-top: 6px solid transparent;
+        }
+
+        .symptom-block.emotional {
+            border-top-color: #f97316;
+        }
+        .symptom-block.behavioral {
+            border-top-color: #3b82f6;
+        }
+        .symptom-block.physical {
+            border-top-color: #10b981;
+        }
+
+        .symptom-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .symptom-list {
+            list-style: none;
+        }
+        .symptom-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.8rem;
+            position: relative;
+        }
+        .symptom-list li:before {
+            content: "▹";
+            color: #ef4444;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .factors-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .factor-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .factor-icon {
+            font-size: 2rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .factor-text {
+            font-size: 1.1rem;
+            color: #334155;
+            flex: 1;
+        }
+
+        .factor-text strong {
+            color: #0f172a;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dashed #e2e8f0;
+            margin: 2rem 0;
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .site-content {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .photo {
+                width: 80px;
+                height: 120px;
+            }
+            .intro-title {
+                font-size: 2.5rem;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
+</head>
+<body id="mainBody">
+    <!-- ИНТРО (появляется поверх всего) -->
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-container">
+            <div class="falling-photos">
+                <div class="photo"></div>
+                <div class="photo"></div>
+                <div class="photo"></div>
+            </div>
+            <div class="explosion">
+                <div class="pixel pixel1"></div>
+                <div class="pixel pixel2"></div>
+                <div class="pixel pixel3"></div>
+                <div class="pixel pixel4"></div>
+                <div class="pixel pixel5"></div>
+                <div class="pixel pixel6"></div>
+                <div class="pixel pixel7"></div>
+                <div class="pixel pixel8"></div>
+                <div class="pixel pixel9"></div>
+                <div class="pixel pixel10"></div>
+                <div class="pixel pixel11"></div>
+                <div class="pixel pixel12"></div>
+            </div>
+            <div class="intro-title">Batrun company sigma mega krutoi</div>
+        </div>
+        <div class="skip-intro" id="skipIntro">Пропустить →</div>
+    </div>
+
+    <!-- ОСНОВНОЙ САЙТ (изначально скрыт) -->
+    <div class="master-wrapper">
+        <div class="site-content" id="siteContent">
+            <div class="container">
+                <!-- Главный заголовок -->
+                <h1>
+                    <i class="fas fa-bolt" style="color: #ef4444; font-size: 2.5rem; vertical-align: middle;"></i> 
+                    Профессиональное выгорание
+                </h1>
+                <div class="subhead">
+                    <i class="fas fa-quote-left" style="margin-right: 8px; opacity: 0.6;"></i> 
+                    Это психологическое состояние длительного физического, эмоционального и умственного истощения из-за хронического стресса на работе.
+                </div>
+
+                <!-- Раздел 2: Факторы -->
+                <h2>
+                    <i class="fas fa-search"></i> 
+                    Почему возникает выгорание?
+                </h2>
+                <p style="margin-bottom: 1.5rem; color: #475569;">Выгорание развивается под воздействием множества факторов:</p>
+
+                <div class="factors-container">
+                    <div class="factor-item">
+                        <span class="factor-icon"><i class="fas fa-building" style="color: #ef4444;"></i></span>
+                        <span class="factor-text">
+                            <strong>Организационные</strong> перегрузки и большие рабочие объёмы; отсутствие распределения работы над задачами; несправедливая оценка труда; низкая поддержка со стороны коллектива или руководства.
+                        </span>
+                    </div>
+                    <div class="factor-item">
+                        <span class="factor-icon"><i class="fas fa-users" style="color: #f97316;"></i></span>
+                        <span class="factor-text">
+                            <strong>Социальные</strong> рабочая среда; конфликты; недостаток признания.
+                        </span>
+                    </div>
+                    <div class="factor-item">
+                        <span class="factor-icon"><i class="fas fa-user" style="color: #3b82f6;"></i></span>
+                        <span class="factor-text">
+                            <strong>Индивидуальные</strong> перфекционизм; высокая чувствительность к стрессу; просмотры чужих успехов.
+                        </span>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Раздел 3: Признаки и симптомы -->
+                <h2>
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    3. Признаки и симптомы выгорания
+                </h2>
+
+                <div class="symptoms-grid">
+                    <div class="symptom-block emotional">
+                        <div class="symptom-title">
+                            <i class="fas fa-heart" style="color: #f97316;"></i> Эмоциональные
+                        </div>
+                        <ul class="symptom-list">
+                            <li>чувство опустошения, усталости</li>
+                            <li>раздражительность, цинизм</li>
+                            <li>потеря мотивации и вдохновения</li>
+                            <li>эмоциональное «отключение» от работы</li>
+                        </ul>
+                    </div>
+                    <div class="symptom-block behavioral">
+                        <div class="symptom-title">
+                            <i class="fas fa-briefcase" style="color: #3b82f6;"></i> Поведенческие
+                        </div>
+                        <ul class="symptom-list">
+                            <li>снижение продуктивности</li>
+                            <li>прокрастинация</li>
+                            <li>избегание общения и задач</li>
+                            <li>частые ошибки</li>
+                        </ul>
+                    </div>
+                    <div class="symptom-block physical">
+                        <div class="symptom-title">
+                            <i class="fas fa-brain" style="color: #10b981;"></i> Физические
+                        </div>
+                        <ul class="symptom-list">
+                            <li>хроническая усталость</li>
+                            <li>головные боли, бессонница</li>
+                            <li>снижение иммунитета</li>
+                            <li>нарушения аппетита</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="background: #f1f5f9; border-radius: 1rem; padding: 1.5rem; margin-top: 2rem; border-left: 6px solid #ef4444;">
+                    <h3 style="margin-bottom: 0.5rem; display: flex; gap: 10px;"><i class="fas fa-layer-group" style="color: #ef4444;"></i> Этапы выгорания</h3>
+                    <p style="color: #334155;">Выгорание не наступает внезапно. Обычно оно проходит через стадии: сначала эмоциональное истощение, затем деперсонализация (цинизм), и наконец — редукция профессиональных достижений. Важно замечать первые звоночки на эмоциональном уровне.</p>
+                </div>
+
+                <h2 style="margin-top: 3rem;">
+                    <i class="fas fa-lightbulb"></i> 
+                    Что делать?
+                </h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-header"><i class="fas fa-clock" style="color: #f97316;"></i> Отдых</div>
+                        <ul>
+                            <li>Регулярные перерывы в работе</li>
+                            <li>Четкие границы рабочего времени</li>
+                            <li>Полноценный сон</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><i class="fas fa-comments" style="color: #3b82f6;"></i> Поддержка</div>
+                        <ul>
+                            <li>Общение с близкими</li>
+                            <li>Обращение к психологу</li>
+                            <li>Поддержка коллег</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><i class="fas fa-heartbeat" style="color: #10b981;"></i> Забота о себе</div>
+                        <ul>
+                            <li>Физическая активность</li>
+                            <li>Хобби вне работы</li>
+                            <li>Осознанность и медитация</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <footer>
+                    <i class="fas fa-shield-alt"></i> Информация составлена на основе материалов по психологии. Если вы чувствуете симптомы выгорания — обратитесь за помощью.
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const intro = document.getElementById('introOverlay');
+            const site = document.getElementById('siteContent');
+            const body = document.getElementById('mainBody');
+            const skipBtn = document.getElementById('skipIntro');
+
+            // Функция показа сайта
+            function showSite() {
+                // Скрываем интро
+                intro.classList.add('hidden');
+                // Меняем фон body
+                body.classList.add('site-visible');
+                // Показываем контент сайта
+                site.classList.add('visible');
+            }
+
+            // Автоматический показ через 3 секунды (синхронизировано с анимацией)
+            setTimeout(showSite, 2800); // 2.8 секунды = время падения + взрыв + появление BURNOUT
+
+            // Кнопка "Пропустить"
+            skipBtn.addEventListener('click', function() {
+                showSite();
+            });
+
+            // На случай, если анимация взрыва чуть длиннее — оставим запас, но можно и сразу показывать
+            // Дополнительно: если пользователь нажмет на любую фотку — тоже пропуск (для удобства)
+            document.querySelectorAll('.photo').forEach(photo => {
+                photo.addEventListener('click', showSite);
+            });
+        })();
+    </script>
+</body>
+</html>
